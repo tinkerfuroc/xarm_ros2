@@ -233,6 +233,8 @@ class MoveItConfigsBuilder(ParameterBuilder):
             val = get_param_str(name, default_val)
             return val[1:-1] if context is not None and isinstance(val, str) and val[0] in ['"', '\''] and val[-1] in ['"', '\''] else val
 
+        urdf_package = get_param_str('urdf_package', 'xarm_description')
+        urdf_file_path = get_param_str('urdf_file_path', 'urdf/xarm_device.urdf.xacro')
         robot_ip = get_param_str('robot_ip', '')
         report_type = get_param_str('report_type', 'normal')
         baud_checkset = get_param_str('baud_checkset', True)
@@ -329,8 +331,8 @@ class MoveItConfigsBuilder(ParameterBuilder):
             'add_other_geometry': add_other_geometry,
         }
 
-        self.__urdf_package = Path(get_package_share_directory('xarm_description'))
-        self.__urdf_file_path = Path('urdf/xarm_device.urdf.xacro')
+        self.__urdf_package = Path(get_package_share_directory(urdf_package))
+        self.__urdf_file_path = Path(urdf_file_path)
         self.__srdf_file_path = Path('srdf/xarm.srdf.xacro')
 
         self.__robot_description = 'robot_description'
@@ -586,8 +588,8 @@ class MoveItConfigsBuilder(ParameterBuilder):
         publish_geometry_updates = True,
         publish_state_updates = True,
         publish_transforms_updates = True,
-        publish_robot_description = False,
-        publish_robot_description_semantic = False,
+        publish_robot_description = True,
+        publish_robot_description_semantic = True,
     ):
         self.__moveit_configs.planning_scene_monitor = {
             # TODO: Fix parameter namespace upstream -- see planning_scene_monitor.cpp:262

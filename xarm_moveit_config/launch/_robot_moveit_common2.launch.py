@@ -29,10 +29,11 @@ def launch_setup(context, *args, **kwargs):
     show_rviz = LaunchConfiguration('show_rviz', default=True)
     use_sim_time = LaunchConfiguration('use_sim_time', default=False)
     moveit_config_dump = LaunchConfiguration('moveit_config_dump')
+    moveit_config_package_name = LaunchConfiguration('moveit_config_package_name', default='xarm_moveit_config')
     
     moveit_config_dump = moveit_config_dump.perform(context)
     moveit_config_dict = yaml.load(moveit_config_dump, Loader=yaml.FullLoader)
-    moveit_config_package_name = 'xarm_moveit_config'
+
 
     # Start the actual move_group node/action server
     move_group_node = Node(
