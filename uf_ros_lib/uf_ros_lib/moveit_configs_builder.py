@@ -615,15 +615,18 @@ class MoveItConfigsBuilder(ParameterBuilder):
             robot_name = '{}{}'.format(self.__robot_type, self.__robot_dof if self.__robot_type == 'xarm' else '6' if self.__robot_type == 'lite' else '')
             
             if file_path is None:
-                file_path = self._package_path / 'config' / robot_name / 'sensors_3d.yaml'
+                file_path = self.__urdf_package / 'config' / 'sensors_3d.yaml'
             else:
-                file_path = self._package_path / file_path
-            if file_path and file_path.exists():
-                sensors_data = load_yaml(file_path)
+                file_path = self.__urdf_package / file_path
+            # if file_path and file_path.exists():
+            sensors_data = load_yaml(file_path)
                 # TODO(mikeferguson): remove the second part of this check once
                 # https://github.com/ros-planning/moveit_resources/pull/141 has made through buildfarm
-                if sensors_data and len(sensors_data['sensors']) > 0 and sensors_data['sensors'][0]:
-                    self.__moveit_configs.sensors_3d = sensors_data
+                # if sensors_data and len(sensors_data['sensors']) > 0:
+            self.__moveit_configs.sensors_3d = sensors_data
+            self.__moveit_configs.sensors_3d.update(
+                    {'octomap_frame': 'xarm_camera_depth_optical_frame', 
+                     'octomap_resolution': 0.02})
         
         return self
 

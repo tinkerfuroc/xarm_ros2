@@ -2,6 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="xarm_device">
   <xacro:macro name="xarm_device" params="
     prefix:=''
+    camera_prefix:=''
     hw_ns:='xarm'
     limited:=false
     effort_control:=false 
@@ -214,17 +215,17 @@
     <xacro:if value="${add_realsense_d435i}">
       <!-- (xarm) Load RealSense D435i URDF -->
       <xacro:include filename="$(find xarm_description)/urdf/camera/realsense_d435i.urdf.xacro" />
-      <xacro:d435i_urdf prefix="${prefix}" add_d435i_links="${add_d435i_links}" />
+      <xacro:d435i_urdf prefix="${prefix}" camera_prefix="${camera_prefix}" add_d435i_links="${add_d435i_links}" />
       <xacro:if value="${add_d435i_links}">
         <xacro:include filename="$(find xarm_description)/urdf/camera/realsense.gazebo.xacro" />    
-        <xacro:realsense_gazebo prefix="${prefix}" />
+        <xacro:realsense_gazebo camera_prefix="${camera_prefix}" />
       </xacro:if>
     </xacro:if>
     <xacro:unless value="${add_realsense_d435i}">
       <link name="${prefix}link_eef"/>
     </xacro:unless>
     <joint name="${prefix}joint_eef" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0.785" />
       <parent link="${prefix}link${dof}" />
       <child link="${prefix}link_eef" />
     </joint>
