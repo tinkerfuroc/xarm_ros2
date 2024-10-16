@@ -22,6 +22,7 @@ from uf_ros_lib.uf_robot_utils import generate_ros2_control_params_temp_file
 def launch_setup(context, *args, **kwargs):
     urdf_package = LaunchConfiguration('urdf_package', default='xarm_description')
     urdf_file_path = LaunchConfiguration('urdf_file_path', default='urdf/xarm_device.urdf.xacro')
+    # srdf_file_path = LaunchConfiguration('srdf_file_path', default='srdf/xarm.srdf.xacro')
     dof = LaunchConfiguration('dof', default=7)
     robot_type = LaunchConfiguration('robot_type', default='xarm')
     prefix = LaunchConfiguration('prefix', default='')
@@ -77,6 +78,7 @@ def launch_setup(context, *args, **kwargs):
         controllers_name=controllers_name,
         urdf_package=urdf_package,
         urdf_file_path=urdf_file_path,
+        # srdf_file_path=srdf_file_path,
         dof=dof,
         robot_type=robot_type,
         prefix=prefix,

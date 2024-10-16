@@ -235,6 +235,7 @@ class MoveItConfigsBuilder(ParameterBuilder):
 
         urdf_package = get_param_str('urdf_package', 'xarm_description')
         urdf_file_path = get_param_str('urdf_file_path', 'urdf/xarm_device.urdf.xacro')
+        # srdf_file_path = get_param_str('srdf_file_path', 'srdf/xarm.srdf.xacro')
         robot_ip = get_param_str('robot_ip', '')
         report_type = get_param_str('report_type', 'normal')
         baud_checkset = get_param_str('baud_checkset', True)
@@ -256,6 +257,7 @@ class MoveItConfigsBuilder(ParameterBuilder):
         ros2_control_plugin = get_param_str('ros2_control_plugin', 'uf_robot_hardware/UFRobotSystemHardware')
         ros2_control_params = get_param_str('ros2_control_params', '')
         add_gripper = get_param_str('add_gripper', False)
+        add_robotiq = get_param_str('add_robotiq', False)
         add_vacuum_gripper = get_param_str('add_vacuum_gripper', False)
         add_bio_gripper = get_param_str('add_bio_gripper', False)
         add_realsense_d435i = get_param_str('add_realsense_d435i', False)
@@ -303,6 +305,7 @@ class MoveItConfigsBuilder(ParameterBuilder):
             'ros2_control_plugin': ros2_control_plugin,
             'ros2_control_params': ros2_control_params,
             'add_gripper': add_gripper,
+            'add_robotiq': add_robotiq,
             'add_vacuum_gripper': add_vacuum_gripper,
             'add_bio_gripper': add_bio_gripper,
             'add_realsense_d435i': add_realsense_d435i,
@@ -326,6 +329,7 @@ class MoveItConfigsBuilder(ParameterBuilder):
             'dof': dof,
             'robot_type': robot_type,
             'add_gripper': add_gripper,
+            'add_robotiq': add_robotiq,
             'add_vacuum_gripper': add_vacuum_gripper,
             'add_bio_gripper': add_bio_gripper,
             'add_other_geometry': add_other_geometry,
@@ -333,7 +337,8 @@ class MoveItConfigsBuilder(ParameterBuilder):
 
         self.__urdf_package = Path(get_package_share_directory(urdf_package))
         self.__urdf_file_path = Path(urdf_file_path)
-        self.__srdf_file_path = Path('srdf/xarm.srdf.xacro')
+        self.__srdf_file_path = Path("srdf/xarm.srdf.xacro")
+        # self.__srdf_file_path = Path(srdf_file_path)
 
         self.__robot_description = 'robot_description'
 
@@ -390,6 +395,7 @@ class MoveItConfigsBuilder(ParameterBuilder):
         """
         key = self.__robot_description + '_semantic'
         file_path = self._package_path / (file_path or self.__srdf_file_path)
+        # file_path = self.__urdf_package / (file_path or self.__srdf_file_path)
         mappings = mappings or self.__srdf_xacro_args
         
         if (mappings is None) or all(
@@ -623,10 +629,11 @@ class MoveItConfigsBuilder(ParameterBuilder):
                 # TODO(mikeferguson): remove the second part of this check once
                 # https://github.com/ros-planning/moveit_resources/pull/141 has made through buildfarm
                 # if sensors_data and len(sensors_data['sensors']) > 0:
-            self.__moveit_configs.sensors_3d = sensors_data
-            self.__moveit_configs.sensors_3d.update(
-                    {'octomap_frame': 'xarm_camera_depth_optical_frame', 
-                     'octomap_resolution': 0.02})
+            # enable octomap
+            # self.__moveit_configs.sensors_3d = sensors_data
+            # self.__moveit_configs.sensors_3d.update(
+            #         {'octomap_frame': 'xarm_camera_depth_optical_frame', 
+            #          'octomap_resolution': 0.02})
         
         return self
 
@@ -1040,7 +1047,7 @@ class DualMoveItConfigsBuilder(ParameterBuilder):
 
         self.__urdf_package = Path(get_package_share_directory('xarm_description'))
         self.__urdf_file_path = Path('urdf/dual_xarm_device.urdf.xacro')
-        self.__srdf_file_path = Path('srdf/dual_xarm.srdf.xacro')
+        # self.__srdf_file_path = Path('srdf/dual_xarm.srdf.xacro')
 
         self.__robot_description = 'robot_description'
 

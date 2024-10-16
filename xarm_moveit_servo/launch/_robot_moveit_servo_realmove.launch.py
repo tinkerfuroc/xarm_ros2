@@ -13,6 +13,7 @@ from launch import LaunchDescription
 from launch.actions import OpaqueFunction, IncludeLaunchDescription, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.conditions import IfCondition
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
@@ -23,6 +24,8 @@ from uf_ros_lib.uf_robot_utils import load_yaml, generate_ros2_control_params_te
 
 
 def launch_setup(context, *args, **kwargs):
+    urdf_package = LaunchConfiguration('urdf_package', default='xarm_description')
+    urdf_file_path = LaunchConfiguration('urdf_file_path', default='urdf/xarm_device.urdf.xacro')
     robot_ip = LaunchConfiguration('robot_ip', default='')
     report_type = LaunchConfiguration('report_type', default='normal')
     baud_checkset = LaunchConfiguration('baud_checkset', default=True)
@@ -61,6 +64,9 @@ def launch_setup(context, *args, **kwargs):
     geometry_mesh_origin_rpy = LaunchConfiguration('geometry_mesh_origin_rpy', default='"0 0 0"')
     geometry_mesh_tcp_xyz = LaunchConfiguration('geometry_mesh_tcp_xyz', default='"0 0 0"')
     geometry_mesh_tcp_rpy = LaunchConfiguration('geometry_mesh_tcp_rpy', default='"0 0 0"')
+
+    rviz_config_package = LaunchConfiguration('rviz_config_package', default='xarm_moveit_servo')
+    launch_joy_to_servo = LaunchConfiguration('launch_joy_to_servo', default=True)
     
     # 1: xbox360 wired
     # 2: xbox360 wireless
@@ -84,6 +90,8 @@ def launch_setup(context, *args, **kwargs):
     moveit_config = MoveItConfigsBuilder(
         context=context,
         controllers_name=controllers_name,
+        urdf_package=urdf_package,
+        urdf_file_path=urdf_file_path,
         robot_ip=robot_ip,
         report_type=report_type,
         baud_checkset=baud_checkset,
@@ -139,7 +147,7 @@ def launch_setup(context, *args, **kwargs):
     controllers = ['joint_state_broadcaster']
 
     # rviz_config_file = PathJoinSubstitution([FindPackageShare(moveit_config_package_name), 'rviz', 'moveit.rviz'])
-    rviz_config_file = PathJoinSubstitution([FindPackageShare('xarm_moveit_servo'), 'rviz', 'servo.rviz'])
+    rviz_config_file = PathJoinSubstitution([FindPackageShare(rviz_config_package), 'rviz', 'servo.rviz'])
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
@@ -214,12 +222,6 @@ def launch_setup(context, *args, **kwargs):
                 parameters=[robot_description_parameters],
             ),
             ComposableNode(
-                package='tf2_ros',
-                plugin='tf2_ros::StaticTransformBroadcasterNode',
-                name='static_tf2_broadcaster',
-                parameters=[{'child_frame_id': 'link_base', 'frame_id': 'world'}],
-            ),
-            ComposableNode(
                 package='moveit_servo',
                 plugin='moveit_servo::ServoNode',
                 name='servo_server',
@@ -241,6 +243,7 @@ def launch_setup(context, *args, **kwargs):
                         'joystick_type': joystick_type,
                     },
                 ],
+                # condition=IfCondition(launch_joy_to_servo),
                 # extra_arguments=[{'use_intra_process_comms': True}],
             ),
             ComposableNode(
@@ -255,6 +258,8 @@ def launch_setup(context, *args, **kwargs):
         ],
         output='screen',
     )
+
+
 
     return [
         RegisterEventHandler(

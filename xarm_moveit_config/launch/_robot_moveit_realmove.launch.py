@@ -22,6 +22,7 @@ from uf_ros_lib.uf_robot_utils import generate_ros2_control_params_temp_file
 def launch_setup(context, *args, **kwargs):
     urdf_package = LaunchConfiguration('urdf_package', default='xarm_description')
     urdf_file_path = LaunchConfiguration('urdf_file_path', default='urdf/xarm_device.urdf.xacro')
+    # srdf_file_path = LaunchConfiguration('srdf_file_path', default='srdf/xarm.srdf.xacro')
     robot_ip = LaunchConfiguration('robot_ip')
     report_type = LaunchConfiguration('report_type', default='normal')
     baud_checkset = LaunchConfiguration('baud_checkset', default=True)
@@ -61,6 +62,7 @@ def launch_setup(context, *args, **kwargs):
     geometry_mesh_tcp_rpy = LaunchConfiguration('geometry_mesh_tcp_rpy', default='"0 0 0"')
 
     rviz_config_package = LaunchConfiguration('rviz_config_package', default='xarm_moveit_config')
+    rviz_file = LaunchConfiguration('rviz_file', default='moveit.rviz')
     no_gui_ctrl = LaunchConfiguration('no_gui_ctrl', default=False)
     ros_namespace = LaunchConfiguration('ros_namespace', default='').perform(context)
 
@@ -82,6 +84,7 @@ def launch_setup(context, *args, **kwargs):
         controllers_name=controllers_name,
         urdf_package=urdf_package,
         urdf_file_path=urdf_file_path,
+        # srdf_file_path=srdf_file_path,
         robot_ip=robot_ip,
         report_type=report_type,
         baud_checkset=baud_checkset,
@@ -144,6 +147,7 @@ def launch_setup(context, *args, **kwargs):
             'use_sim_time': 'false',
             'moveit_config_dump': yaml.dump(moveit_config.to_dict()),
             'moveit_config_package_name' : rviz_config_package,
+            'moveit_config_file_name' : rviz_file,
         }.items(),
     )
 
