@@ -630,10 +630,10 @@ class MoveItConfigsBuilder(ParameterBuilder):
                 # https://github.com/ros-planning/moveit_resources/pull/141 has made through buildfarm
                 # if sensors_data and len(sensors_data['sensors']) > 0:
             # enable octomap
-            # self.__moveit_configs.sensors_3d = sensors_data
-            # self.__moveit_configs.sensors_3d.update(
-            #         {'octomap_frame': 'xarm_camera_depth_optical_frame', 
-            #          'octomap_resolution': 0.02})
+            self.__moveit_configs.sensors_3d = sensors_data
+            self.__moveit_configs.sensors_3d.update(
+                    {'octomap_frame': 'xarm_camera_depth_optical_frame', 
+                     'octomap_resolution': 0.02})
         
         return self
 
