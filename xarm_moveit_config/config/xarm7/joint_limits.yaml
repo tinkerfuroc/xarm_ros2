@@ -15,6 +15,7 @@ joint_limits:
     has_acceleration_limits: true
     max_acceleration: 10.0
     min_position: -1.0472
+    # max_position: 1.74
   joint3:
     has_velocity_limits: true
     max_velocity: 2.14
@@ -32,13 +33,18 @@ joint_limits:
     max_velocity: 2.14
     has_acceleration_limits: true
     max_acceleration: 10.0
+    # max_position: 1.5708
+    # min_position: -1.5708
   joint6:
     has_velocity_limits: true
     max_velocity: 2.14
     has_acceleration_limits: true
     max_acceleration: 10.0
+    # max_position: 1.5708
   joint7:
     has_velocity_limits: true
     max_velocity: 2.14
     has_acceleration_limits: true
     max_acceleration: 10.0
+    # max_position: 1.5708
+    # min_position: -1.5708

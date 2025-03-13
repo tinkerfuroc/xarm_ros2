@@ -86,6 +86,10 @@ def launch_setup(context, *args, **kwargs):
         parameters=[{'use_sim_time': use_sim_time}],
     )
 
+    # with open('/home/tinker/tk25_ws/test.log', 'w') as f:
+    #     print(attach_xyz.perform(context), file=f)
+    #     print(args, file=f)
+
     robot_planner_node_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(PathJoinSubstitution([FindPackageShare('xarm_planner'), 'launch', '_robot_planner.launch.py'])),
         condition=IfCondition(no_gui_ctrl),
